@@ -1,0 +1,203 @@
+import java.util.Scanner;
+
+// AccountDetail class (stores single account info)
+class AccountDetail {
+    private int Account_Number;
+    private String Holder_name;
+    private double Balance;
+    private String Email;
+    private String Phone_number;
+
+    // Constructor
+    public AccountDetail(int accountNo, String H_name, double balance, String email, String phone) {
+        Account_Number = accountNo;
+        Holder_name = H_name;
+        Balance = balance;
+        Email = email;
+        Phone_number = phone;
+    }
+
+    // Deposit money
+    public void deposit(double amount) {
+        if (amount > 0) {
+            Balance += amount;
+            System.out.println("Deposited: " + amount);
+            System.out.println("Total Balance: " + Balance);
+        } else {
+            System.out.println("Amount must be positive.");
+        }
+    }
+
+    // Withdraw money
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= Balance) {
+            Balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+            System.out.println("Remaining Balance: " + Balance);
+        } else {
+            System.out.println("Insufficient Balance.");
+        }
+    }
+
+    // Show account details
+    public void show_AccountDetails() {
+        System.out.println("Account Number: " + Account_Number);
+        System.out.println("Holder Name: " + Holder_name);
+        System.out.println("Balance: " + Balance);
+        System.out.println("Email: " + Email);
+        System.out.println("Phone Number: " + Phone_number);
+    }
+
+    // Update contact info
+    public void Update_contact_Details(String Updated_Email, String Updated_PhoneNo) {
+        Email = Updated_Email;
+        Phone_number = Updated_PhoneNo;
+        System.out.println("Contact Details Updated.");
+    }
+
+    // Getter
+    public int get_Account_Number() {
+        return Account_Number;
+    }
+}
+
+// User Interface Class 
+public class UserInterface {
+    private AccountDetail[] accounts;
+    private int accountCount;
+    private Scanner sc;
+
+    // Constructor
+    public UserInterface() {
+        accounts = new AccountDetail[101]; // max 101 accounts
+        accountCount = 0;
+        sc = new Scanner(System.in);
+    }
+
+    // Create a new account
+    public void createAccount() {
+        sc.nextLine();
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Initial Balance: ");
+        double balance = sc.nextDouble();
+        sc.nextLine();
+
+        System.out.print("Enter Email: ");
+        String email = sc.nextLine();
+
+        System.out.print("Enter Phone Number: ");
+        String phone = sc.nextLine();
+
+        int accNo = 1 + accountCount;
+        accounts[accountCount] = new AccountDetail(accNo, name, balance, email, phone);
+        accountCount++;
+
+        System.out.println("Account Created! Your Account Number is: " + accNo);
+    }
+
+    // Find account by number
+    private AccountDetail findAccount(int accNo) {
+        for (int i = 0; i < accountCount; i++) {
+            if (accounts[i].get_Account_Number() == accNo) {
+                return accounts[i];
+            }
+        }
+        return null;
+    }
+
+    // Deposit function
+    public void Deposit() {
+        System.out.print("Enter Account Number: ");
+        int accNo = sc.nextInt();
+        System.out.print("Enter Amount: ");
+        double amount = sc.nextDouble();
+
+        AccountDetail acc = findAccount(accNo);
+        if (acc != null) {
+            acc.deposit(amount);
+        } else {
+            System.out.println("Account not found!");
+        }
+    }
+
+    // Withdraw function
+    public void Withdrawal() {
+        System.out.print("Enter Account Number: ");
+        int accNo = sc.nextInt();
+        System.out.print("Enter Amount: ");
+        double amount = sc.nextDouble();
+
+        AccountDetail acc = findAccount(accNo);
+        if (acc != null) {
+            acc.withdraw(amount);
+        } else {
+            System.out.println("Account not found!");
+        }
+    }
+
+    // Show details
+    public void showAccountDetails() {
+        System.out.print("Enter Account Number: ");
+        int accNo = sc.nextInt();
+
+        AccountDetail acc = findAccount(accNo);
+        if (acc != null) {
+            acc.show_AccountDetails();
+        } else {
+            System.out.println("Account not found!");
+        }
+    }
+
+    // Update contact
+    public void updateContact() {
+        System.out.print("Enter Account Number: ");
+        int accNo = sc.nextInt();
+        sc.nextLine(); 
+
+        AccountDetail acc = findAccount(accNo);
+        if (acc != null) {
+            System.out.print("Enter New Email: ");
+            String newEmail = sc.nextLine();
+            System.out.print("Enter New Phone Number: ");
+            String newPhone = sc.nextLine();
+            acc.Update_contact_Details(newEmail, newPhone);
+        } else {
+            System.out.println("Account not found!");
+        }
+    }
+
+    // Main Menu to help to chose user an option to select
+    public void mainMenu() {
+        while (true) {
+            System.out.println("\n===== Banking Application =====");
+            System.out.println("1. Create Account");
+            System.out.println("2. Deposit");
+            System.out.println("3. Withdraw");
+            System.out.println("4. View Details");
+            System.out.println("5. Update Contact");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 1: createAccount(); break;
+                case 2: Deposit(); break;
+                case 3: Withdrawal(); break;
+                case 4: showAccountDetails(); break;
+                case 5: updateContact(); break;
+                case 6:
+                    System.out.println("Thank you!");
+                    System.exit(0);
+                default: System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    // Main Method
+    public static void main(String[] args) {
+        UserInterface u1 = new UserInterface();
+        u1.mainMenu();
+    }
+}
